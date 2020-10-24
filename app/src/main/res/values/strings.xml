@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AD_5G_Manage</string>
+    <string name="new_user">新用户</string>
+    <string name="signin">登录</string>
+    <string name="tip_account">请输入账号</string>
+    <string name="tip_password">请输入密码</string>
+    <string name="tip_email">请输入邮箱地址</string>
+    <string name="register">注册</string>
+    <string name="delete_ad">删除广告</string>
+    <string name="all_played_number">总播放次数：</string>
+    <string name="upload_numbers">总上传广告视频数量：</string>
+    <string name="look_ad_list">查看视频列表</string>
+    <string name="string_NO">序号</string>
+    <string name="string_vedio_name">视频名称</string>
+    <string name="string_played_number">播放次数</string>
+</resources>

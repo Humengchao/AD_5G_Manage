@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+<!--  每一条广告的布局  -->
+
+                                    <!--  这里先暂时对每个ui控件的宽度用wrap_content,到时候设置为好看的布局宽度  -->
+
+    <!--  序号  -->
+    <TextView
+        android:id="@+id/ad_number"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <!--  广告视频名称  -->
+    <TextView
+        android:id="@+id/ad_name"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <!--  播放次数  -->
+    <TextView
+        android:id="@+id/ad_played_number"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <!--  删除广告视频按钮  -->
+    <Button
+        android:id="@+id/delete_ad"
+        android:gravity="center"
+        android:layout_weight="1.2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_ad" />
+</LinearLayout>
