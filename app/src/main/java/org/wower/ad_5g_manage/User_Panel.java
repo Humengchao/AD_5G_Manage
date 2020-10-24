@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,29 +32,14 @@ public class User_Panel extends AppCompatActivity {
     private String path;
     String res = "ss";
     TextView video_path;
-    private String url = "http://192.168.3.3:8080/videoupload";
     private List<Video> videoList = new ArrayList<>();
     private int numberOfVideos = 0;
     TextView playedNumber_textview;
+    private ProgressBar progressBar;
+    private int isUploadDown = 1;
 
-//    private static final int AFTER_UPLOAD = 1;
-//
-//    private Handler handler = new Handler() {
-//        public void handleMessage (Message msg) {
-//            switch (msg.what) {
-//                case AFTER_UPLOAD:
-//                    // 在这里进行ui操作
-//                    Toast.makeText(User_Panel.this, "上传完成", Toast.LENGTH_SHORT).show();
-//                    video_path.setText("上传完成");
-//                    playedNumber_textview.setText(++numberOfVideos);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    };
 
-    /************************这里没有写全，还有个视频上传模块还没写，到时候记得加上去******************/
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_panel);
@@ -79,6 +65,9 @@ public class User_Panel extends AppCompatActivity {
         videoNumbers_textview.setText(String.valueOf(numberOfVideos));
         video_path.setText("请选择视频");
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_user);
+        progressBar.setVisibility(View.GONE);
+
 
         if (intent.getBooleanExtra("isLogin", false)) {
             // 来自登录的
@@ -99,7 +88,6 @@ public class User_Panel extends AppCompatActivity {
         });
 
 
-        // 还有上传模块的还没写
         Button select = (Button) findViewById(R.id.select_video);
         Button upload = (Button) findViewById(R.id.upload);
 
@@ -127,6 +115,7 @@ public class User_Panel extends AppCompatActivity {
                     Toast.makeText(User_Panel.this, "您还未输入视频的优先级", Toast.LENGTH_SHORT).show();
                 } else {
                     // 这里写上传的模块
+                    progressBar.setVisibility(View.VISIBLE);
 
                     new Thread(new Runnable() {
                         @Override
@@ -134,29 +123,19 @@ public class User_Panel extends AppCompatActivity {
                             try {
                                 res = Post.upload(path, fileName, level, intent.getStringExtra("uname"));
                                 path = null;
-//                                Looper.prepare();
-//                                Toast.makeText(User_Panel.this, "上传完成", Toast.LENGTH_SHORT).show();
-//                                video_path.setText("上传完成");
-//                                playedNumber_textview.setText(++numberOfVideos);
-//                                Looper.loop();
-//                                Message message = new Message();
-//                                message.what = AFTER_UPLOAD;
-//                                handler.sendMessage(message);
+                                isUploadDown = 0;
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     }).start();
-                    // 这里写上传后的代码，比如进度条           *********这里有问题*******************************************
-//                    Looper.prepare();
+
+                    while (isUploadDown == 1);
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(User_Panel.this, "上传完成", Toast.LENGTH_SHORT).show();
                     video_path.setText("上传完成");
-//                    playedNumber_textview.setText(++numberOfVideos);
-//                    video_path.setText("上传完成");
-//                    videoNumbers_textview.setText(String.valueOf(numberOfVideos));
 
-
-//                    Looper.loop();
                 }
             }
         });

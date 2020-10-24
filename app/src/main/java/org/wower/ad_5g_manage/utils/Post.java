@@ -24,9 +24,9 @@ public class Post {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     // 服务器地址
-//    private static final String URL = "http://ad.wqnmd.net:8080";
+    private static final String URL = "http://ad.wqnmd.net:8080";
 
-    private static final String URL="http://192.168.3.3:8080";
+//    private static final String URL="http://192.168.3.3:8080";
 
     public static Response sendPost(String url, String json) {
         RequestBody body = RequestBody.create(JSON, json);
