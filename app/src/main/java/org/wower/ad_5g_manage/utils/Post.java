@@ -24,9 +24,9 @@ public class Post {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     // 服务器地址
-    private static final String URL = "http://ad.wqnmd.net:8080";
+//    private static final String URL = "http://ad.wqnmd.net:8080";
 
-//    private static final String URL="http://192.168.3.3:8080";
+    private static final String URL="http://192.168.3.3:8080";
 
     public static Response sendPost(String url, String json) {
         RequestBody body = RequestBody.create(JSON, json);
@@ -118,6 +118,46 @@ public class Post {
                 .addFormDataPart("uname", uname)
                 .addFormDataPart("video_name", videoName)
                 .addFormDataPart("level", level)
+                .addFormDataPart("time", "false")   // 判断是否上传了时间
+                .addFormDataPart("file", filename, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+                .build();
+
+        Request request = new Request.Builder().url(URL + "/videoupload").post(requestBody).build();
+        Response response = null;
+        String res = null;
+        try {
+            response = client.newCall(request).execute();
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     * 重载，多了个时和分的变量
+     * @param filePath
+     * @param videoName
+     * @param level
+     * @param uname
+     * @param hour
+     * @param minute
+     * @return
+     * @throws IOException
+     */
+    public static String upload(String filePath, String videoName, String level, String uname, String hour, String minute) throws IOException {
+        String[] str = filePath.split("/");
+        String filename = str[str.length - 1];
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("uname", uname)
+                .addFormDataPart("video_name", videoName)
+                .addFormDataPart("level", level)
+                .addFormDataPart("time", "true")    // 判断是否上传了时间
+                .addFormDataPart("hour",hour)
+                .addFormDataPart("minute", minute)
                 .addFormDataPart("file", filename, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
                 .build();
 

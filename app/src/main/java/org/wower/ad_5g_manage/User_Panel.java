@@ -3,16 +3,20 @@ package org.wower.ad_5g_manage;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,6 +28,7 @@ import org.wower.ad_5g_manage.utils.RealPathFromUriUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class User_Panel extends AppCompatActivity {
@@ -37,6 +42,7 @@ public class User_Panel extends AppCompatActivity {
     TextView playedNumber_textview;
     private ProgressBar progressBar;
     private int isUploadDown = 1;
+    private EditText play_time;
 
 
 
@@ -87,6 +93,44 @@ public class User_Panel extends AppCompatActivity {
             }
         });
 
+        // 点击输入框弹出选择播放的时间
+        play_time = (EditText)findViewById(R.id.play_time);
+        play_time.setInputType(InputType.TYPE_NULL); //不显示系统输入键盘
+        play_time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                // TODO Auto-generated method stub
+                if(hasFocus){
+                    Calendar c = Calendar.getInstance();
+                    new TimePickerDialog(User_Panel.this, new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            play_time.setText("视频播放时间:" + hourOfDay + ":" + minute);
+                        }
+                    }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
+
+                }
+            }
+        });
+
+        play_time.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar c = Calendar.getInstance();
+                new TimePickerDialog(User_Panel.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        play_time.setText("视频播放时间:" + hourOfDay + ":" + minute);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
+
+            }
+        });
+
 
         Button select = (Button) findViewById(R.id.select_video);
         Button upload = (Button) findViewById(R.id.upload);
@@ -109,11 +153,14 @@ public class User_Panel extends AppCompatActivity {
             public void onClick(View v) {
                 String fileName = filename.getText().toString();
                 String level = editText_level.getText().toString();
+                String play_time_editvalue = play_time.getText().toString();
+                String timeOfPlay[] = play_time_editvalue.split(":");
                 if (fileName.equals("") || fileName == null) {
                     Toast.makeText(User_Panel.this, "您还未输入视频名称", Toast.LENGTH_SHORT).show();
                 } else if (level.equals("") || level == null) {
                     Toast.makeText(User_Panel.this, "您还未输入视频的优先级", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (play_time_editvalue.equals("") || play_time_editvalue == null) {
+                    // 不选择播放时间时候
                     // 这里写上传的模块
                     progressBar.setVisibility(View.VISIBLE);
 
@@ -122,6 +169,30 @@ public class User_Panel extends AppCompatActivity {
                         public void run() {
                             try {
                                 res = Post.upload(path, fileName, level, intent.getStringExtra("uname"));
+                                path = null;
+                                isUploadDown = 0;
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+                    while (isUploadDown == 1);
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(User_Panel.this, "上传完成", Toast.LENGTH_SHORT).show();
+                    video_path.setText("上传完成");
+
+                }else {
+                    // 选择播放时间的时候
+                    // 这里写上传的模块
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                res = Post.upload(path, fileName, level, intent.getStringExtra("uname"), timeOfPlay[1], timeOfPlay[2]);
                                 path = null;
                                 isUploadDown = 0;
 

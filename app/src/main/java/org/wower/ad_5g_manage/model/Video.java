@@ -10,6 +10,7 @@ public class Video implements Serializable {
     private int playedNumber;
     private String videoName;
     private int level;  // 视频的优先级
+    private String play_time;   // 播放的时间
 
 
     public Video() {
@@ -76,5 +77,13 @@ public class Video implements Serializable {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public String getPlay_time() {
+        return play_time;
+    }
+
+    public void setPlay_time(String play_time) {
+        this.play_time = play_time;
     }
 }

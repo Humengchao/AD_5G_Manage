@@ -91,6 +91,12 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="请输入该广告视频的优先级(1-10)" />
+        <EditText
+            android:id="@+id/play_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="请选择该广告视频播放的时间，不选择默认按照优先级排布"/>
         <Button
             android:id="@+id/select_video"
             android:layout_width="match_parent"
